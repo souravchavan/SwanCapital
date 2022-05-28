@@ -1,0 +1,60 @@
+/*
+Filter = 1;
+
+AddColumn(Open, "Open", 1.2);
+AddColumn(High, "High", 1.2);
+AddColumn(Low, "Low", 1.2);
+AddColumn(Close, "Close", 1.2);
+AddColumn(Volume, "Volume", 1.2);
+*/
+
+/*
+Filter = Volume > 150000;
+AddColumn(Close, "Close", 1.2);
+*/
+
+/*
+Filter = Close > Open;
+
+AddColumn((Close/Open)-1, "Gain %", 1.2);
+*/
+
+/*
+Filter = (Close < Open) AND (Volume > 500000);
+AddColumn((Close/Open)-1, "Loss %", 1.2);	
+*/
+
+
+/*
+date1 = 1191231;
+date2 = 1201231;
+
+Filter = ((Close > Open) AND DateNum() == date1) OR ((Close > Open) AND DateNum()==date2);  
+
+AddColumn((Close/Open)-1, "Gain %", 1.2);
+*/
+
+/*
+date1 = 1210101;
+time1 = 91500;
+
+Filter = (DateNum() == date1) AND (TimeNum() == time1);
+
+AddColumn(Open, "Open", 1.2);
+AddColumn(High, "High", 1.2);
+AddColumn(Low, "Low", 1.2);
+AddColumn(Close, "Close", 1.2);
+AddColumn(Volume, "Volumne", 1.2);
+*/
+
+
+/*
+time1 = 151500;
+VolumeFilter = 10000;
+
+
+Filter = ((Volume > VolumeFilter) AND (TimeNum() == time1));
+
+AddColumn(Close, "Close", 1.2);
+*/
+
