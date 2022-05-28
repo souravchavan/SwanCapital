@@ -1,0 +1,267 @@
+
+/*
+tillDate = 1210201;
+overnightReturns = 
+
+
+Filter = (DateNum() == tillDate);
+
+//AddColumn(((Open/Ref(Close, -1))-1)*100, "Overnight Returns", 1.4);
+AddColumn(((Open/Ref(Close, -1))-1)*100, "Overnight Returns", 1.4);
+AddColumn(cum(((Open/Ref(Close, -1))-1)*100), "Sum of Overnight Returns", 1.4);
+
+//AddColumn((cum(((Open/Ref(Close, -1))-1)*100), True), "Sum of Overnight Returns", 1.4);
+
+*/
+
+/*
+tillDate = 1210201;
+
+Filter = (DateNum() == tillDate);
+
+AddColumn(Sum((Open/Ref(Close, -1))- 1, 50)*100, "Sum of last 50 days", 1.2);
+*/
+
+
+/*
+// system 2
+tillDate = 1210201;
+time1 = 91500;
+time2 = 153000;
+
+open1 = ValueWhen(TimeNum()==time1, Open, 1);
+close1 = TimeFrameGetPrice("C", inDaily, 0);  // 0 for today's price
+intradayReturns = ((close1/open1)-1)*100;
+	
+g = iif(timeNum() == time1,  intradayReturns, 0);
+	
+TimeFrameSet(inDaily);
+cumulativeSum = Cum(g);
+TimeFrameRestore();
+	
+cumulativeSum1 = TimeFrameExpand(cumulativeSum, inDaily, expandFirst);	
+	
+		
+Filter = TimeNum() == time1 AND DateNum() == tillDate;
+
+AddColumn(cumulativeSum, "Cumulative Sum", 1.4);
+
+*/
+
+
+/*
+// system 3
+tillDate = 1210201;
+time1 = 103000;
+
+open1 = TimeFrameGetPrice("C", inDaily, -1);
+ref(TimeFrameGetPrice("C", inDaily, 0), -1);
+
+close1 = ValueWhen(TimeNum() == time1, Close, 1);
+
+overnightReturns = ((close1/open1)-1)*100;
+
+a = IIf(IsNull(overnightReturns),0,overnightReturns);
+
+g = IIf(TimeNum() == time1, a, 0);
+
+cumulativeSum1 = Cum(g);
+	
+Filter = TimeNum() == time1 AND DateNum() == tillDate;
+AddColumn(g, "Overnight Returns",1.4);
+AddColumn(cumulativeSum1, "Cumulative Sum",1.4);
+*/
+
+
+/*
+// system 4.1.1
+tillDate = 1210201;
+
+//sum1 = cum(((Open/Ref(Close, -1))-1)*100);
+
+prev_rsi = Ref(RSI(14), -1);
+prev_volume = Ref(Volume, -1);
+moving_average = MA(ref(Volume, -1), 10);
+
+overnightReturns = ((Open/Ref(Close, -1))-1)*100;
+
+overnightReturns1 = IIf(prev_rsi > 70, IIf(prev_volume > moving_average, overnightReturns, 0), 0);
+
+sum1 = Cum(overnightReturns1);
+
+
+Filter = DateNum() == tillDate;
+
+
+//AddColumn(prev_rsi, "Prev RSI", 1.4);
+//AddColumn(prev_volume, "Prev Volume", 1.4);
+//AddColumn(moving_average, "Moving Average", 1.4);
+//AddColumn(overnightReturns1, "Overnight Returns", 1.4);
+AddColumn(sum1, "Sum of Overnight Returns", 1.4);
+
+*/
+
+
+/*
+// system 4.1.2
+
+
+tillDate = 1210201;
+
+prev_rsi = Ref(RSI(14), -1);
+prev_volume = Ref(Volume, -1);
+moving_average = MA(ref(Volume, -1), 10);
+
+overnightReturns = ((Open/Ref(Close, -1)) - 1) * 100;
+
+overnightReturns1 = IIf(prev_rsi > 70, IIf(prev_volume > moving_average, overnightReturns, 0), 0);
+
+sum1 = Sum(overnightReturns1, 50);
+
+Filter = DateNum() == tillDate;
+
+AddColumn(sum1, "Sum of Overnight Returns", 1.4);
+*/
+
+/*
+// system 4.2
+tillDate = 1210201;
+time1 = 91500;
+time2 = 153000;
+
+open1 = ValueWhen(TimeNum()==time1, Open, 1);
+close1 = TimeFrameGetPrice("C", inDaily, 0);  // 0 for today's price
+intradayReturns = ((close1/open1)-1)*100;
+
+TimeFrameSet(inDaily);
+prev_rsi = Ref(RSI(14), -1);
+prev_volume = Ref(Volume, -1);
+moving_average = MA(Ref(Volume, -1), 10);
+TimeFrameRestore();
+
+prev_rsi_1 = TimeFrameExpand(prev_rsi, inDaily, expandFirst);
+prev_volume_1 = TimeFrameExpand(prev_volume, inDaily, expandFirst);
+moving_average_1 = TimeFrameExpand(moving_average, inDaily, expandFirst);
+	
+intradayReturns1 = iif(timeNum() == time1,  intradayReturns, 0);
+intradayReturns2 = IIf(prev_rsi_1 > 70 AND prev_volume_1 > moving_average_1, intradayReturns1, 0);
+	
+//TimeFrameSet(inDaily);
+cumulativeSum1 = Cum(intradayReturns2);
+//TimeFrameRestore();
+	
+//cumulativeSum1 = TimeFrameExpand(cumulativeSum, inDaily, expandFirst);	
+	
+Filter = TimeNum() == time1 AND DateNum() == tillDate;
+
+AddColumn(cumulativeSum1, "Cumulative Sum", 1.4);
+*/
+
+
+/*
+// system 4.3.1
+
+
+tillDate = 1210201;
+time1 = 103000;
+
+
+open1 = TimeFrameGetPrice("C", inDaily, -1);
+
+close1 = ValueWhen(TimeNum() == time1, Close, 1);
+
+intradayReturns = ((close1/open1)-1)*100;
+
+TimeFrameSet(inDaily);
+prev_rsi = Ref(RSI(14), -1);
+prev_volume = Ref(Volume, -1);
+moving_average = MA(Ref(Volume, -1), 10);
+TimeFrameRestore();
+
+prev_rsi_1 = TimeFrameExpand(prev_rsi, inDaily, expandFirst);
+prev_volume_1 = TimeFrameExpand(prev_volume, inDaily, expandFirst);
+moving_average_1 = TimeFrameExpand(moving_average, inDaily, expandFirst);
+	
+intradayReturns1 = iif(timeNum() == time1, intradayReturns, 0);
+intradayReturns2 = IIf(prev_rsi_1 > 70 AND prev_volume_1 > moving_average_1, intradayReturns1, 0);
+
+a = IIf(IsNull(intradayReturns),0,intradayReturns2);
+
+g = IIf(TimeNum() == time1, a, 0);
+
+cumulativeSum1 = Cum(g);
+	
+Filter = TimeNum() == time1 AND DateNum() == tillDate;
+
+AddColumn(cumulativeSum1, "Cumulative Sum",1.4);
+*/
+
+/*
+// system 4.3.2
+
+
+tillDate = 1210201;
+time1 = 103000;
+
+close2 = TimeFrameGetPrice("C", inDaily, -1);
+open2 = TimeFrameGetPrice("O", inDaily, -1);
+
+gap = ((close2/open2)-1) * 100;
+
+
+open1 = TimeFrameGetPrice("C", inDaily, -1);
+
+close1 = ValueWhen(TimeNum() == time1, Close, 1);
+
+intradayReturns = ((close1/open1)-1)*100;
+
+a = IIf(IsNull(intradayReturns),0,intradayReturns);
+
+g = IIf(TimeNum() == time1 AND (gap > 1), a, 0);
+
+//g1 = IIf(gap > 1, g, 0);
+
+cumulativeSum1 = Cum(g);
+	
+Filter = TimeNum() == time1 AND DateNum() == tillDate;
+Addcolumn(intradayReturns, "Overnight Returns", 1.4);
+AddColumn(cumulativeSum1, "Cumulative Sum",1.4);
+*/
+
+
+// outcome 1
+
+
+tillDate = 1210201;
+overnightReturns = ((Open/Ref(Close, -1))-1)*100;
+
+
+Filter = (DateNum() <= tillDate);
+
+//AddColumn(((Open/Ref(Close, -1))-1)*100, "Overnight Returns", 1.4);
+AddColumn(overnightReturns, "Overnight Returns", 1.4);
+AddColumn(cum(overnightReturns), "Sum of Overnight Returns", 1.4);
+
+//AddColumn((cum(((Open/Ref(Close, -1))-1)*100), True), "Sum of Overnight Returns", 1.4);
+
+
+/*
+tillDate = 1210201;
+time1 = 103000;
+
+open1 = TimeFrameGetPrice("C", inDaily, -1);
+//ref(TimeFrameGetPrice("C", inDaily, 0), -1);
+
+close1 = ValueWhen(TimeNum() == time1, Close, 1);
+
+overnightReturns = ((close1/open1)-1)*100;
+
+a = IIf(IsNull(overnightReturns),0,overnightReturns);
+
+g = IIf(TimeNum() == time1, a, 0);
+
+cumulativeSum1 = Cum(g);
+	
+Filter = TimeNum() == time1 AND DateNum() <= tillDate;
+AddColumn(g, "Overnight Returns",1.4);
+AddColumn(cumulativeSum1, "Cumulative Sum",1.4);*/
