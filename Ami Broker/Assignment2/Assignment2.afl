@@ -1,0 +1,75 @@
+/*
+date1 = 1210301;
+
+
+Filter = (Close > Open) AND ((Volume * Close) > 500000000) AND (DateNum() == date1);
+
+AddColumn((Close/Open) - 1, "% Gain", 1.4);
+AddColumn(Volume * Close, "Volume", 1.2);
+*/
+
+/*
+date1 = 1210301;
+
+Filter = (Close < Open) AND ((Volume * Close) > 500000000) AND (DateNum() == date1);
+
+AddColumn((Close/Open) - 1, "% Loss", 1.4);
+AddColumn(Volume * Close, "Volume", 1.2);
+*/
+
+/*
+date1 = 1210301;
+time1 = 110000;
+
+Filter = (Close > Open) AND ((Volume * Close) > 10000000) AND (DateNum() == date1) AND (TimeNum() == time1);
+
+AddColumn((Close/Open) -1, "% Gain", 1.4);
+AddColumn(Volume * Close, "Volume", 1.2);
+*/
+
+/*
+date1 = 1210301;
+time1 = 110000;
+
+Filter = (Close < Open) AND ((Volume * Close) > 10000000) AND (DateNum() == date1) AND (TimeNum() == time1);
+
+AddColumn((Close/Open) - 1, "% Loss", 1.4);
+AddColumn(Volume * Close, "Volume", 1.2); 
+*/
+
+/*
+Filter = 1;
+
+Addcolumn(Open, "Open", 1.2);
+AddColumn(High, "High", 1.2);
+AddColumn(Low, "Low", 1.2);
+AddColumn(Close, "Close", 1.2);
+AddColumn(Volume * Close, "Volume", 1.2);
+*/
+
+
+
+/*
+date1 = 1210223;
+date2 = 1210224;
+date3 = 1210225;
+date4 = 1210226;
+
+
+volume1 = ValueWhen(DateNum() == date1, Volume * Close);
+volume2 = ValueWhen(DateNum() == date2, Volume * Close);
+volume3 = ValueWhen(DateNum() == date3, Volume * Close);
+volume4 = ValueWhen(DateNum() == date4, Volume * Close);
+
+
+avg_volume = (volume1 + volume2 + volume3)/3;
+
+Filter = (DateNum() == date4) AND (volume4 > (2 * avg_volume));
+
+
+AddColumn(volume4, "Volume", 1.2);	
+
+AddColumn(avg_volume, "Avg_Volume", 1.2);	
+*/
+
+
