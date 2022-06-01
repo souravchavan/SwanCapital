@@ -1,0 +1,154 @@
+/*
+// part1.1
+
+time1 = 140000;
+time2 = 092000;
+
+Buy = TimeNum() == time1;
+Sell = TimeNum() == time2;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 50);
+SetPositionSize(2, spsPercentOfEquity);
+
+
+//PositionScore = 
+
+BuyPrice = Close;
+SellPrice = Close;
+
+
+Filter = 1;
+AddColumn(BuyPrice, "Buy Price", 1.4);
+AddColumn(SellPrice, "Sell Price", 1.4);
+*/
+
+
+// part1.2
+
+time1 = 140000;
+time2 = 092000;
+
+open1 = TimeFrameGetPrice("O", inDaily, 0, expandFirst);
+close1 = ValueWhen(TimeNum() == 135500, Close);
+
+roc1 = ((close1/open1)-1)*100;
+
+Buy = TimeNum() == time1 AND roc1 > 0;
+Sell = TimeNum() == time2;
+
+Buy = ExRem(Buy, Sell);
+Sell = ExRem(Sell, Buy);
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 5);
+SetPositionSize(20, spsPercentOfEquity);
+
+PositionScore = IIf(roc1 > 0, roc1, 0);
+
+BuyPrice = Close AND ROC1 > 0;
+SellPrice = Close;
+
+Filter = DateNum() == 1210601;
+//AddColumn(BuyPrice, "Buy Price", 1.4);
+//AddColumn(SellPrice, "Sell Price", 1.4);
+AddColumn(open1, "Open 1", 1.4);
+AddColumn(close1, "Close 1", 1.4);
+//AddColumn(roc1, "Roc1", 1.4);
+AddColumn(PositionScore, "Postion Score", 1.4);
+
+/*
+// part2.1
+
+close1 = TimeFrameGetPrice("C", inDaily, -2);
+close2 = TimeFrameGetPrice("C", inDaily, -1);
+
+roc1 = ((close2/close1)-1)*100;
+
+Short = 1;
+Cover = 1;
+
+ShortPrice = Open;
+Coverprice = Close;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 50);
+SetPositionSize(2, spsPercentOfEquity);
+
+Filter = 1;
+AddColumn(ShortPrice, "Short Price", 1.4);
+AddColumn(CoverPrice, "Cover Price", 1.4);
+*/
+
+/*
+// part2.2
+
+close1 = TimeFrameGetPrice("C", inDaily, -2);
+close2 = TimeFrameGetPrice("C", inDaily, -1);
+
+roc1 = ((close2/close1)-1)*100;
+
+ShortPrice = Open;
+CoverPrice = Close;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 5);
+SetPositionSize(20, spsPercentOfEquity);
+
+
+symlist = CategoryGetSymbols(categoryWatchlist, 4);
+//sym = StrExtract(symlist, 0);
+
+if (Status("stocknum") == 0)
+{
+	StaticVarRemove("*");
+	
+	for(i=0; (sym = StrExtract(symlist, i)) != ""; i++)
+	{
+		SetForeign(sym);
+		close1 = TimeFrameGetPrice("C", inDaily, -2);
+		close2 = TimeFrameGetPrice("C", inDaily, -1);
+
+		roc1 = ((close2/close1)-1)*100;
+
+		value = IIf(roc1>0, roc1, 0);
+		RestorePriceArrays();
+		StaticVarSet("ValuesToSort" + sym, value);
+
+	}
+}	
+x = StaticVarGet("ValuesToSort" + Name());
+StaticVarGenerateRanks( "rank", "ValuesToSort", 0, 1224 );
+y = StaticVarGet( "RankValuesToSort" + Name() )  ;		
+
+Short = y < 6;
+Cover = 1;
+
+
+
+Filter = 1; 
+AddColumn(x, "x", 1.4);
+AddColumn(y, "Rank", 1.4);
+AddColumn(roc1, "ROC1", 1.4);
+
+AddColumn(close1, "Close Before 2 Days", 1.4);
+AddColumn(close2, "Previous Close", 1.4);
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
