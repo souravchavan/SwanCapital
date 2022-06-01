@@ -1,0 +1,254 @@
+/*
+
+
+//close1 = TimeFrameGetPrice("C", inDaily, -2);
+//close2 = TimeFrameGetPrice("C", inDaily, -1);
+
+//roc1 = ((close2/close1)-1)*100;
+roc1 = Ref(ROC(Close, 1), -1);
+
+//volume1 = Ref(Volume, -2);
+//volume2 = Ref(Volume, -1);
+
+//roc2 = ((volume2/volume1)-1)*100;
+
+roc3 = ROC(Volume, 1);
+weight = 0.50;
+
+ShortPrice = Open;
+CoverPrice = Close;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 5);
+SetPositionSize(20, spsPercentOfEquity);
+
+
+symlist = CategoryGetSymbols(categoryWatchlist, 4);
+//sym = StrExtract(symlist, 0);
+
+
+
+if (Status("stocknum") == 0)
+{
+	StaticVarRemove("*");
+	qty = 0;
+	for(i=0; (sym = StrExtract(symlist, i)) != ""; i++)
+	{
+		SetForeign(sym);
+		//close1 = TimeFrameGetPrice("C", inDaily, -2);
+		//close2 = TimeFrameGetPrice("C", inDaily, -1);
+		
+		//roc1 = ((close2/close1)-1)*100;
+		roc1 = Ref(ROC(Close, 1), -1);
+		value1 = IIf(roc1>0, roc1, 0);
+	
+		//volume1 = Ref(Volume, -2);
+		//volume2 = Ref(Volume, -1);
+
+		//roc2 = ((volume2/volume1)-1)*100;
+		roc3 = ROC(Volume, 1);
+		value2 = IIf(roc3>0, roc3, 0);
+		
+		RestorePriceArrays();
+		StaticVarSet("ROCOfClose" + sym, value1);
+		StaticVarSet("ROCOfVolume" + sym, value2);
+		qty++;
+	}	
+
+StaticVarGenerateRanks("Rank", "ROCOfClose", 0, 1224);
+StaticVarGenerateRanks("Rank", "ROCOfVolume", 0, 1224);
+}
+
+x1 = StaticVarGet("ROCOfClose" + Name());
+x2 = StaticVarGet("ROCOfVolume" + Name());
+
+
+if (Status("stocknum") == 0)
+{
+	//StaticVarRemove("*");
+	
+	for(i=0; (sym = StrExtract(symlist, i)) != ""; i++)
+	{
+		SetForeign(sym);
+
+
+		y1 = StaticVarGet("RankROCOfClose" + sym);		
+		y2 = StaticVarGet("RankROCOfVolume" + sym);
+
+		z1 = y1 * weight;
+		z2 = y2 * weight;
+		z3 = z1 + z2;
+		z3 = qty - z3;
+		StaticVarSet("CloseAndVolume" + sym, z3);
+		
+		RestorePriceArrays();
+	}	
+
+//StaticVarSet("CloseAndVolume" + Name(), z3);
+StaticVarGenerateRanks( "Rank", "CloseAndVolume", 0, 1224);
+}
+z4 = StaticVarGet("RankCloseAndVolume" + Name());
+
+y1 = StaticVarGet("RankROCOfClose" + Name());		
+y2 = StaticVarGet("RankROCOfVolume" + Name());
+
+z1 = y1 * weight;
+z2 = y2 * weight;
+z3 = z1 + z2;
+
+AddToComposite(z4, "~Rank" + Name(), "C");
+
+Short = z4 < 6;
+Cover = 1;
+
+Filter = 1; 
+AddColumn(x1, "ROC of Close", 1.4);
+AddColumn(x2, "ROC of Volume", 1.4);
+AddColumn(z3, "Average of ROC and Volume", 1.4);
+AddColumn(z4, "Final Rank", 1.4);
+
+
+*/
+/*
+roc3 = ROC(Volume, 1);
+weight1 = 0.50;
+weight2 = 1 - weight1;
+
+ShortPrice = Open;
+CoverPrice = Close;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 5);
+SetPositionSize(20, spsPercentOfEquity);
+
+
+symlist = CategoryGetSymbols(categoryWatchlist, 4);
+//sym = StrExtract(symlist, 0);
+
+
+
+if (Status("stocknum") == 0)
+{
+	StaticVarRemove("*");
+	qty = 0;
+	for(i=0; (sym = StrExtract(symlist, i)) != ""; i++)
+	{
+		SetForeign(sym);
+		close1 = ref(close, -1);
+		close2 = Ref(Close, -2);		
+		roc1 = ((close1/close2)-1)*100;
+		//roc1 = Ref(ROC(Close, 1), -1);
+		value1 = IIf(roc1>0, roc1, 0);
+	
+		volume1 = Ref(Volume, -1);
+		volume2 = Ref(Volume, -2);
+
+		roc2 = ((volume1/volume2)-1)*100;
+		//roc3 = ROC(Volume, 1);
+		value2 = IIf(roc2>0, roc2, 0);
+		
+		RestorePriceArrays();
+		StaticVarSet("ROCOfClose" + sym, value1);
+		StaticVarSet("ROCOfVolume" + sym, value2);
+		qty++;
+	}	
+
+StaticVarGenerateRanks("Rank", "ROCOfClose", 0, 1224);
+StaticVarGenerateRanks("Rank", "ROCOfVolume", 0, 1224);
+}
+
+x1 = StaticVarGet("ROCOfClose" + Name());
+x2 = StaticVarGet("ROCOfVolume" + Name());
+
+
+if (Status("stocknum") == 0)
+{
+	//StaticVarRemove("*");
+	
+	for(i=0; (sym = StrExtract(symlist, i)) != ""; i++)
+	{
+		SetForeign(sym);
+
+
+		y1 = 50 - StaticVarGet("RankROCOfClose" + sym);		
+		y2 = 50 - StaticVarGet("RankROCOfVolume" + sym);
+
+		z1 = y1 * weight1;
+		z2 = y2 * weight2;
+		z3 = z1 + z2;
+
+
+		StaticVarSet("CloseAndVolume" + sym, z3);
+		
+		RestorePriceArrays();
+	}	
+
+//StaticVarSet("CloseAndVolume" + Name(), z3);
+StaticVarGenerateRanks( "Rank", "CloseAndVolume", 0, 1234);
+}
+z4 = StaticVarGet("RankCloseAndVolume" + Name());
+
+y1 = StaticVarGet("RankROCOfClose" + Name());		
+y2 = StaticVarGet("RankROCOfVolume" + Name());
+
+z1 = y1 * weight1;
+z2 = y2 * weight2;
+z3 = z1 + z2;
+
+AddToComposite(z4, "~~Rank" + Name(), "C");
+
+
+close2 = Foreign("~~Rank" + Name(), "C", 0);	
+
+
+Short = z4 < 6;
+Cover = 1;
+
+Short = ExRem(Short, Cover);
+Cover = ExRem(Cover, Short);
+
+
+
+
+Filter = 1; 
+AddColumn(x1, "ROC of Close", 1.4);
+AddColumn(x2, "ROC of Volume", 1.4);
+AddColumn(z3, "Average of ROC and Volume", 1.4);
+AddColumn(z4, "Final Rank", 1.4);
+AddColumn(close2, "Close", 1.4);
+*/
+
+b = Foreign("~~Rank" + Name(), "Close");
+
+x = Optimize("Entry Time", 1, 1, 7, 1);
+if (x==1) { entry_time = 091500;}
+if (x==2) { entry_time = 092000;}
+if (x==3) { entry_time = 092500;}
+if (x==4) { entry_time = 093000;}
+if (x==5) { entry_time = 093500;}
+if (x==6) { entry_time = 094000;}
+if (x==7) { entry_time = 094500;}
+
+y = Optimize("Exit Time", 12, 11, 13, 1);
+if (y==11) { exit_time = 151000;}
+if (y==12) { exit_time = 151500;}
+if (y==13) { exit_time = 152000;}
+
+Short = (TimeNum() == entry_time) AND b < 6;
+Cover = TimeNum() == exit_time;
+
+Short = ExRem(Short, Cover);
+Cover = ExRem(Cover, Short);
+
+ShortPrice = Open;
+CoverPrice = Close;
+
+SetOption("InitialEquity", 10000000);
+SetOption("MaxOpenPositions", 5);
+SetPositionSize(20, spsPercentOfEquity);
+ApplyStop(0, 1, 4);
+
+Filter = 1;
+AddColumn(b, "b", 1.4);
+AddColumn(ShortPrice, "Short Price", 1.4);
+AddColumn(CoverPrice, "Cover Price", 1.4);
